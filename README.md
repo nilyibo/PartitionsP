@@ -17,7 +17,7 @@ The code used OpenMP for parallel computing.
 
 ## Result
 
-On AWS EC2 machine: 2 billion digits. See 'result' folder for details.
+See 'result' folder for details. Links to large size data is available later.
 
 ## Author
 
