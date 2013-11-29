@@ -81,7 +81,7 @@ void writeToFile(long min, long max)
         for (long i = min; i <= max; ++i)
         {
             output << data[i];
-            if (i % 1000 == 0) // // 1000 chars per line
+            if (i % 1000 == 0) // 1000 chars per line
                 output << "\n";
         }
         output << "\n\n======== END ========" << endl;
