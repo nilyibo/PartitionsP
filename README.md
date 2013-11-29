@@ -17,9 +17,9 @@ The code used OpenMP for parallel computing.
 
 ## Result
 
-With AWS EC2 machine, we're able to compute up to 2 billion digits.
+On AWS EC2 machine: 2 billion digits. See 'result' folder for details.
 
-## Authors
+## Author
 
 [Yibo G](https://github.com/nilyibo)
 
