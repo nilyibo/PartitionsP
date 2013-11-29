@@ -17,7 +17,7 @@ The code used OpenMP for parallel computing.
 
 ## Result
 
-See 'result' folder for details. Links to large size data is available later.
+See 'result' folder for details. For full output, please refer to [here](https://skydrive.live.com/?cid=CFAEF2CB2D92F2FD&id=CFAEF2CB2D92F2FD%211284).
 
 ## Author
 
