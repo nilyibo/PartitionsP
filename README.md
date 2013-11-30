@@ -5,7 +5,7 @@ C++ Code for computing Partition Function mod 2 in Number Theory.
 
 ## About
 
-Wikipedia: [Partition (number theory)](http://goo.gl/C7fT)
+Wikipedia: [Partition function (number theory)](http://goo.gl/kqHbR7)
 
 ## Modulus
 
