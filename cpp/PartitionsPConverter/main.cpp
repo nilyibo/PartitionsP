@@ -3,10 +3,27 @@
 using namespace std;
 
 #define INPUTFILE "mod2-1m.txt"
-#define OUTPUTFILE "output.sql"
-#define TABLENAME "mod2_1m"
+#define OUTPUTFILE "output.csv"
+#define INTSIZE 32
 
-#define DEBUG
+//#define DEBUG
+
+/*
+	Each 32 bool values uses one unsigned int as bit representation.
+	I.e. For any n = 32k, n -> number, such that p(n + offset) = (number >> offset) & 0x1.
+*/
+
+/*
+	Database format:
+
+	CREATE TABLE  `*************`.`p_n_mod2` (
+	`n` INT( 12 ) UNSIGNED NOT NULL COMMENT  'independent variable',
+	`parity` INT( 32 ) UNSIGNED NOT NULL COMMENT  'PartitionsP(n) mod 2',
+	UNIQUE (
+	`n`
+	)
+	) ENGINE = MYISAM COMMENT =  'Data access: p(32k+offset) = p(32k)''s ''offset'' bit.';
+*/
 
 int main()
 {
@@ -16,12 +33,14 @@ int main()
 	if (!input.is_open())
 	{
 		cerr << "Cannot open input file \"" << INPUTFILE << "\"!" << endl;
+		system("pause");
 		return -1;
 	}
 
 	if (!output.is_open())
 	{
 		cerr << "Cannot open output file \"" << OUTPUTFILE << "\"!" << endl;
+		system("pause");
 		return -1;
 	}
 
@@ -29,35 +48,41 @@ int main()
 	const long limit = 10;
 #endif
 
-	output << "USE `yiboguo2_partitionsp`;\n"
-		<< "DROP TABLE IF EXIST `" << TABLENAME << "`;\n"
-		<< "CREATE TABLE `" << TABLENAME << "` (\n"
-		<< "`index` INT(12) NOT NULL PRIMARY KEY,\n"
-		<< "`parity` BOOL NOT NULL\n"
-		<< ") ENGINE = MYISAM;\n"
-		<< endl;
-
-	output << "INSERT INTO  `yiboguo2_partitionsp`.`" << TABLENAME << "`"
-		<< "(`index`, `parity`) VALUES"
-		<< endl;
-
 	long count = 0;
+	unsigned int temp = 0;
+	char curr;
 
-	while (!input.eof())
+	while (true)
 	{
 		++count;
-		char curr;
 		input >> curr;
 #ifdef DEBUG
 		cout << curr << endl;
 		if (count > limit)
 			break;
 #else
-		output << "('" << count << "','" << curr << "')," << endl;
+		if (input.eof())
+			break;
+
+		if (curr != '0' && curr != '1')
+		{
+			--count;	// Discard current character
+			cerr << "Illegal character detected!" << endl;
+			continue;
+		}
+
+		if (count % INTSIZE == 0)
+		{
+			output << "'" << (count - INTSIZE) << "','" << temp << "'" << endl;
+			temp = 0;
+		}
+
+		if (curr == '1')
+			temp |= (1 << (count % INTSIZE));
 #endif
 	}
 
-	output << ";" << endl;
+	output << "'" << (count - count % INTSIZE) << "','" << temp << "'" << endl;
 
 	system("pause");
 	return 0;
