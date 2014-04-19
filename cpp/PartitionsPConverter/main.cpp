@@ -2,7 +2,7 @@
 #include <fstream>
 using namespace std;
 
-#define INPUTFILE "mod2-1m.txt"
+#define INPUTFILE "mod2-1k.txt"
 #define OUTPUTFILE "output.csv"
 #define INTSIZE 32
 
