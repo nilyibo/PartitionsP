@@ -5,7 +5,16 @@
 	$mysql_database = "";
 
 	$con = mysqli_connect($mysql_hostname, $mysql_username, $mysql_password, $mysql_database);
-	$query = ";";
+
+	$param_l = $_GET["l"];
+	$param_nmin = $_GET["nmin"];
+	$param_nmax = $_GET["nmax"];
+	$param_nmin = $param_nmin - $param_nmin % 32;
+
+	if ($param_l == 2)
+		$query = "SELECT * FROM `p_n_mod2` WHERE `n`>=$param_nmin AND `n`<=$param_nmax;";
+	elseif ($param_l == 2)
+		$query = ";";
 
 	$result = mysqli_query($con, $query);
 

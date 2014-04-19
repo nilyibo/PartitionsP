@@ -2,8 +2,21 @@
  * UI handlers
  */
 
+var response;
+var params = [];	// l, nmin, nmax
+
 function requestButton_click() {
-	var params = inputParams();
+	// Disable buttons
+	var requestButton = document.getElementById('requestButton');
+	var lSelect = document.getElementById("lSelect");
+	var nminInput = document.getElementById("nminInput");
+	var nmaxInput = document.getElementById("nmaxInput");
+	requestButton.disabled = true;
+	lSelect.disabled = true;
+	nminInput.disabled = true;
+	nmaxInput.disabled = true;
+
+	params = inputParams();
 	if (params == [])
 		return;
 
@@ -79,17 +92,45 @@ function querySuccess(queryStatus, responseText) {
 	status.style.color = '#000000';
 
 	var result = document.getElementById('result-div');
-	result.innerHTML = responseText;
+	result.innerHTML = "";
+
+	//var response;
+	response = JSON.parse(responseText);
+
+	for (var i = 0; i < response.length - 1; ++i)	// Last one is null
+	{
+		result.innerHTML += response[i].parity + '<br>';
+	}
+
+	// Restore buttons
+	var requestButton = document.getElementById('requestButton');
+	var lSelect = document.getElementById("lSelect");
+	var nminInput = document.getElementById("nminInput");
+	var nmaxInput = document.getElementById("nmaxInput");
+	requestButton.disabled = false;
+	lSelect.disabled = false;
+	nminInput.disabled = false;
+	nmaxInput.disabled = false;
 }
 
 // handles the response, adds the html
-function queryError(status) {
+function queryError(queryStatus) {
 	var status = document.getElementById('status-div');
-	status.innerHTML = "Error: " + status;
+	status.innerHTML = "Error: " + queryStatus;
 	status.style.color = '#ff0000';
 
 	var result = document.getElementById('result-div');
 	result.innerHTML = "Connection error. Please try again later.";
+
+	// Restore buttons
+	var requestButton = document.getElementById('requestButton');
+	var lSelect = document.getElementById("lSelect");
+	var nminInput = document.getElementById("nminInput");
+	var nmaxInput = document.getElementById("nmaxInput");
+	requestButton.disabled = false;
+	lSelect.disabled = false;
+	nminInput.disabled = false;
+	nmaxInput.disabled = false;
 }
 
 // helper function for cross-browser request object
@@ -128,7 +169,8 @@ function getRequest(url, success, error) {
 		}
 	}
 
-	var urlAndParam = url + "";	// TODO: change this
+	var urlAndParam = url + "?l=" + params[0]
+					+ "&nmin=" + params[1] + "&nmax=" + params[2];	// TODO: change this
 
 	// Send out request
 	req.open("GET", urlAndParam, true);
