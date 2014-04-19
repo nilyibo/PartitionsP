@@ -7,14 +7,7 @@ var params = [];	// l, nmin, nmax
 
 function requestButton_click() {
 	// Disable buttons
-	var requestButton = document.getElementById('requestButton');
-	var lSelect = document.getElementById("lSelect");
-	var nminInput = document.getElementById("nminInput");
-	var nmaxInput = document.getElementById("nmaxInput");
-	requestButton.disabled = true;
-	lSelect.disabled = true;
-	nminInput.disabled = true;
-	nmaxInput.disabled = true;
+	toggleUIInputs(false);
 
 	params = inputParams();
 	if (params == [])
@@ -26,6 +19,28 @@ function requestButton_click() {
 function inputKeyDown(event) {
 	if (event.keyCode == 13)	// 'Enter' key
 		document.getElementById('requestButton').click();
+}
+
+// If enabled, then turn on inputs; otherwise, disable them
+function toggleUIInputs(enabled) {
+	var requestButton = document.getElementById('requestButton');
+	var lSelect = document.getElementById("lSelect");
+	var nminInput = document.getElementById("nminInput");
+	var nmaxInput = document.getElementById("nmaxInput");
+	if (enabled)
+	{
+		requestButton.disabled = false;
+		lSelect.disabled = false;
+		nminInput.disabled = false;
+		nmaxInput.disabled = false;
+	}
+	else
+	{
+		requestButton.disabled = true;
+		lSelect.disabled = true;
+		nminInput.disabled = true;
+		nmaxInput.disabled = true;
+	}
 }
 
 /**
@@ -74,6 +89,15 @@ function inputWarning(id) {
 
 // sends the query
 function sendQuery() {
+	// Check for n range
+	var tooLarge = (params[2] - params[1]) >= 5000;
+	if(tooLarge && !confirm("n range is very large.\n"
+			+ "This may cause the page to be unresponsive for some time.\n"
+			+ "Do you want to continue?")) {
+		toggleUIInputs(true);
+		return;
+	}
+
 	getRequest(
 		'./query.php',	// URL for the PHP file
 		querySuccess,	// handle successful request
@@ -103,14 +127,7 @@ function querySuccess(queryStatus, responseText) {
 	}
 
 	// Restore buttons
-	var requestButton = document.getElementById('requestButton');
-	var lSelect = document.getElementById("lSelect");
-	var nminInput = document.getElementById("nminInput");
-	var nmaxInput = document.getElementById("nmaxInput");
-	requestButton.disabled = false;
-	lSelect.disabled = false;
-	nminInput.disabled = false;
-	nmaxInput.disabled = false;
+	toggleUIInputs(true);
 }
 
 // handles the response, adds the html
@@ -123,14 +140,7 @@ function queryError(queryStatus) {
 	result.innerHTML = "Connection error. Please try again later.";
 
 	// Restore buttons
-	var requestButton = document.getElementById('requestButton');
-	var lSelect = document.getElementById("lSelect");
-	var nminInput = document.getElementById("nminInput");
-	var nmaxInput = document.getElementById("nmaxInput");
-	requestButton.disabled = false;
-	lSelect.disabled = false;
-	nminInput.disabled = false;
-	nmaxInput.disabled = false;
+	toggleUIInputs(true);
 }
 
 // helper function for cross-browser request object
