@@ -72,7 +72,7 @@ function inputParams() {
 		return [];
 	}
 
-	if (isNaN(nmax) || nmax < nmin)
+	if (isNaN(nmax) || nmax < nmin || nmax > 100000000)
 	{
 		inputWarning('nmaxInput');
 		return [];
