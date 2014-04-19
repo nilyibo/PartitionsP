@@ -12,7 +12,7 @@
 	$param_nmin = $param_nmin - $param_nmin % 32;
 
 	if ($param_l == 2)
-		$query = "SELECT * FROM `p_n_mod2` WHERE `n`>=$param_nmin AND `n`<=$param_nmax;";
+		$query = "SELECT * FROM `p_n_mod2` WHERE `n`>=$param_nmin AND `n`<=$param_nmax ORDER BY `n`;";
 	else
 		$query = ";";
 
