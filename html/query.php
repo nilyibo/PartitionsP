@@ -1,9 +1,5 @@
 <?php
-	$mysql_hostname = "";
-	$mysql_username = "";
-	$mysql_password = "";
-	$mysql_database = "";
-
+	require("./credentials.php");
 	$con = mysqli_connect($mysql_hostname, $mysql_username, $mysql_password, $mysql_database);
 
 	$param_l = $_GET["l"];
