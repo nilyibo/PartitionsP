@@ -13,7 +13,7 @@
 
 	if ($param_l == 2)
 		$query = "SELECT * FROM `p_n_mod2` WHERE `n`>=$param_nmin AND `n`<=$param_nmax;";
-	elseif ($param_l == 2)
+	else
 		$query = ";";
 
 	$result = mysqli_query($con, $query);
