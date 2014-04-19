@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Partition Function</title>
+    <link rel="stylesheet" href="../css/WinJS-ui-light.css">
+    <script type="text/javascript" src="./js/default.js"></script>
+    <style type="text/css">
+      td {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body style="overflow-y: scroll;">
+    <div id="page-container" style="width: 800px; height: 100%; position: relative; margin: 0 auto;">
+      <section id="header" style="padding-bottom: 20px;">
+        <h1>Partition Function <i>mod l</i></h1>
+      </section>
+
+      <section id="about">
+        <h2>About</h2>
+        <p>In number theory, a/an <b>(integer) partition</b> of a positive integer <i>n</i> is a way of writing <i>n</i> as a sum of positive integers.</p>
+        <p>The <b>partition function</b> <i>p(n)</i> represents the number of possible partitions of a natural number <i>n</i>.</p>
+        <p>We studied the distribution of <i>p(n) mod l</i> for <i>l</i> = 2, 3, 4, 5, 6.</p>
+      </section>
+
+      <section id="data-panel" style="position: relative; overflow: hidden;">
+        <h2>Data</h2>
+        <div id="app-body" style="position: relative; overflow: hidden; border: 1px solid #e3e3e3; border-radius: 4px;">
+          <div style="border-bottom: 1px solid #ccc;">
+            <p>Parameters:</p>
+            <table id="parameters" width="798px">
+              <tr>
+                <td width="25%">
+                  mod <i>l</i>:
+                  <select id="lSelect" tabindex="1">
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                  </select>
+                </td>
+
+                <td width="25%">min n:
+                  <input id="nminInput" type="number" min="1" max="100000000" step="1"
+                    value="1" onkeydown="inputKeyDown(event);" style="width: 100px;" tabindex="2">
+                </td>
+
+                <td width="25%">max n:
+                  <input id="nmaxInput" type="number" min="1" max="100000000" step="1"
+                    value="1000" onkeydown="inputKeyDown(event);" style="width: 100px;" tabindex="3">
+                </td>
+
+                <td width="25%">
+                  <button id="requestButton" onclick="requestButton_click()" tabindex="4">Request</button>
+                </td>
+              </tr>
+            </table>
+
+            <p>
+              <div id="status-div">Idle</div>
+            </p>
+          </div>
+
+          <div style="border-bottom: 1px solid #ccc;">
+            <p>Result (<i>p(n) mod l</i>):</p>
+            <p>
+              <div id="result-div">Click button to show result.</div>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="details">
+        <h2>Detailed information</h2>
+        <p>tba</p>
+      </section>
+
+      <section id="references">
+        <h2>References</h2>
+        <p>Wikipedia: <a href="http://en.wikipedia.org/wiki/Partition_(number_theory)#Partition_function">Partition Function</a></p>
+        <p>Wolfram Mathworld: <a href="http://mathworld.wolfram.com/PartitionFunctionP.html">Partition Function P</a></p>
+      </section>
+
+      <section id="pageFooter">
+        <div id="cotentCurve" style="border-bottom: 1px solid #ccc; font-size: 1px; height: 8px; margin-bottom: 8px;"></div>
+        <div id="copyright" style="margin-top: 20px; margin-bottom: 20px; color: gray;">
+          <span> Yibo Guo © 2014</span>
+          <a href="https://github.com/nilyibo/PartitionsP">PartitionsP Project</a>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
