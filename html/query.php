@@ -13,6 +13,10 @@
 
 	if ($param_l == 2)
 		$query = "SELECT * FROM `p_n_mod2` WHERE `n`>=$param_nmin AND `n`<=$param_nmax ORDER BY `n`;";
+	elseif ($param_l == 3)
+		$query = "SELECT * FROM `p_n_mod3` WHERE `n`>=$param_nmin AND `n`<=$param_nmax ORDER BY `n`;";
+	elseif ($param_l == 4)
+		$query = "SELECT * FROM `p_n_mod4` WHERE `n`>=$param_nmin AND `n`<=$param_nmax ORDER BY `n`;";
 	else
 		$query = ";";
 
