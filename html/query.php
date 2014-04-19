@@ -9,7 +9,13 @@
 	$param_l = $_GET["l"];
 	$param_nmin = $_GET["nmin"];
 	$param_nmax = $_GET["nmax"];
-	$param_nmin = $param_nmin - $param_nmin % 32;
+	if ($param_l == 2)
+		$BITS = 32;
+	elseif ($param_l == 3 || $param_l == 4)
+		$BITS = 16;
+	else // 5 or 6
+		$BITS = 10;
+	$param_nmin = $param_nmin - $param_nmin % $BITS;
 
 	if ($param_l == 2)
 		$query = "SELECT * FROM `p_n_mod2` WHERE `n`>=$param_nmin AND `n`<=$param_nmax ORDER BY `n`;";
