@@ -93,14 +93,83 @@ function inputWarning(id) {
 	input.select();
 }
 
+// Returns 0 on success, -1 on error
 function processResponse(response) {
 	var result = document.getElementById('result-div');
-	result.innerHTML = "";
+	result.innerHTML = ("<i>l</i>=" + params[0] + ", <i>n</i> from "
+						+ params[1] + "  to " + params[2] + "(100 per line)<br>");
 
-	for (var i = 0; i < response.length - 1; ++i)	// Last one is null
+	var start = params[1], end = params[2];
+	var SIZE = 32;
+	var alignedStart = start - (start % SIZE);
+	var alignedEnd = end - (end % SIZE);
+
+	if (alignedStart > alignedEnd)
+		return -1;
+	else if (alignedStart == alignedEnd)
 	{
-		result.innerHTML += response[i].parity + '<br>';
+		if (response.length != 2)
+			return -1;
+		var n = parseInt(response[0].n);
+		if (n != alignedStart)
+			return -1;
+		for (var i = start; i <= end; ++i)
+		{
+			var parity = parseInt(response[0].parity);
+			if (isNaN(parity))
+				return -1;
+			result.innerHTML += ((parity >> (i - alignedStart)) & 0x1);
+		}
 	}
+	else
+	{
+		var counter = 0;
+
+		// Validate date
+		if (alignedEnd - alignedStart != (response.length - 2) * SIZE)
+			return -1;
+		for (var i = 0; i < response.length - 1; ++i)
+		{
+			var n = parseInt(response[i].n);
+			if (n != alignedStart + SIZE * i)
+				return -1;
+		}
+
+		// Data output
+		for (var i = start; i < alignedStart + SIZE; ++i)
+		{
+			var parity = parseInt(response[0].parity);
+			result.innerHTML += ((parity >> (i % SIZE)) & 0x1);
+			++counter;
+		}
+
+		for (var i = alignedStart + SIZE; i < alignedEnd; ++i)
+		{
+			var index = Math.floor((i - alignedStart) / SIZE);
+			var parity = parseInt(response[index].parity);
+			result.innerHTML += ((parity >> (i % SIZE)) & 0x1);
+			++counter;
+			if (counter % 100 == 0)
+			{
+				counter = 0;
+				result.innerHTML += '<br>';
+			}
+		}
+
+		for (var i = alignedEnd; i <= end; ++i)
+		{
+			var parity = parseInt(response[response.length - 2].parity);
+			result.innerHTML += ((parity >> (i % SIZE)) & 0x1);
+			++counter;
+			if (counter % 100 == 0)
+			{
+				counter = 0;
+				result.innerHTML += '<br>';
+			}
+		}
+	}
+
+	return 0;
 }
 
 /**
@@ -144,7 +213,11 @@ function querySuccess(queryStatus, responseText) {
 	}
 
 	var response = JSON.parse(responseText);
-	processResponse(response);
+	if (processResponse(response) == -1)
+	{
+		var result = document.getElementById('result-div');
+		result.innerHTML = "Parse error. Server returned unrecognized data.";
+	}
 
 	// Restore buttons
 	toggleUIInputs(true);
