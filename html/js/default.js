@@ -103,7 +103,25 @@ function processResponse(response) {
 						+ params[1] + "  to " + params[2] + "(100 per line)<br>");
 
 	var start = params[1], end = params[2];
-	var SIZE = 32;
+	var SIZE, BITS, MASK;
+	if (params[0] == 2)
+	{
+		SIZE = 32;
+		BITS = 1;
+		MASK = 0x1;
+	}
+	else if (params[0] == 3 || params[0] == 4)
+	{
+		SIZE = 16;
+		BITS = 2;
+		MASK = 0x3;
+	}
+	else	// 5/6
+	{
+		SIZE = 10;
+		BITS = 3;
+		MASK = 0x7;
+	}
 	var alignedStart = start - (start % SIZE);
 	var alignedEnd = end - (end % SIZE);
 
@@ -116,13 +134,11 @@ function processResponse(response) {
 		var n = parseInt(response[0].n);
 		if (n != alignedStart)
 			return -1;
+		var parity = parseInt(response[0].parity);
+		if (isNaN(parity))
+			return -1;
 		for (var i = start; i <= end; ++i)
-		{
-			var parity = parseInt(response[0].parity);
-			if (isNaN(parity))
-				return -1;
-			result.innerHTML += ((parity >> (i - alignedStart)) & 0x1);
-		}
+			result.innerHTML += ((parity >> (BITS *(i - alignedStart))) & MASK);
 	}
 	else
 	{
@@ -142,7 +158,7 @@ function processResponse(response) {
 		for (var i = start; i < alignedStart + SIZE; ++i)
 		{
 			var parity = parseInt(response[0].parity);
-			result.innerHTML += ((parity >> (i % SIZE)) & 0x1);
+			result.innerHTML += ((parity >> (BITS * (i % SIZE))) & MASK);
 			++counter;
 		}
 
@@ -150,7 +166,7 @@ function processResponse(response) {
 		{
 			var index = Math.floor((i - alignedStart) / SIZE);
 			var parity = parseInt(response[index].parity);
-			result.innerHTML += ((parity >> (i % SIZE)) & 0x1);
+			result.innerHTML += ((parity >> (BITS * (i % SIZE))) & MASK);
 			++counter;
 			if (counter % 100 == 0)
 			{
@@ -162,7 +178,7 @@ function processResponse(response) {
 		for (var i = alignedEnd; i <= end; ++i)
 		{
 			var parity = parseInt(response[response.length - 2].parity);
-			result.innerHTML += ((parity >> (i % SIZE)) & 0x1);
+			result.innerHTML += ((parity >> (BITS * (i % SIZE))) & MASK);
 			++counter;
 			if (counter % 100 == 0)
 			{
