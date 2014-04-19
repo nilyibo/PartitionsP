@@ -1,17 +1,27 @@
 /**
+ * This file contains the function for PartitionsP data
+ *
+ * @file default.js
+ * @author Yibo G (https://github.com/nilyibo)
+ */
+var params = [];	// l, nmin, nmax
+
+/**
  * UI handlers
  */
-
-var response;
-var params = [];	// l, nmin, nmax
 
 function requestButton_click() {
 	// Disable buttons
 	toggleUIInputs(false);
 
 	params = inputParams();
-	if (params == [])
+	if (params.length == 0)
+	{
+		toggleUIInputs(true);
+		var result = document.getElementById('result-div');
+		result.innerHTML = "Please correct the error(s).";
 		return;
+	}
 
 	sendQuery();
 }
@@ -83,6 +93,16 @@ function inputWarning(id) {
 	input.select();
 }
 
+function processResponse(response) {
+	var result = document.getElementById('result-div');
+	result.innerHTML = "";
+
+	for (var i = 0; i < response.length - 1; ++i)	// Last one is null
+	{
+		result.innerHTML += response[i].parity + '<br>';
+	}
+}
+
 /**
  * PHP related query functions
  */
@@ -95,7 +115,7 @@ function sendQuery() {
 			+ "This may cause the page to be unresponsive for some time.\n"
 			+ "Do you want to continue?")) {
 		toggleUIInputs(true);
-		return;
+		return false;
 	}
 
 	getRequest(
@@ -106,7 +126,7 @@ function sendQuery() {
 	return false;
 }
 
-// handles drawing an error message
+// handles successful response
 function querySuccess(queryStatus, responseText) {
 	var status = document.getElementById('status-div');
 	if (queryStatus == 200)
@@ -115,22 +135,22 @@ function querySuccess(queryStatus, responseText) {
 		status.innerHTML = "Status: " + queryStatus;
 	status.style.color = '#000000';
 
-	var result = document.getElementById('result-div');
-	result.innerHTML = "";
-
-	//var response;
-	response = JSON.parse(responseText);
-
-	for (var i = 0; i < response.length - 1; ++i)	// Last one is null
+	if (responseText == 'Error')
 	{
-		result.innerHTML += response[i].parity + '<br>';
+		var result = document.getElementById('result-div');
+		result.innerHTML = "Data not found.";
+		toggleUIInputs(true);
+		return;
 	}
+
+	var response = JSON.parse(responseText);
+	processResponse(response);
 
 	// Restore buttons
 	toggleUIInputs(true);
 }
 
-// handles the response, adds the html
+// handles error
 function queryError(queryStatus) {
 	var status = document.getElementById('status-div');
 	status.innerHTML = "Error: " + queryStatus;
