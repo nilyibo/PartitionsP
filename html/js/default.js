@@ -23,6 +23,9 @@ function requestButton_click() {
 		return;
 	}
 
+	var result = document.getElementById('result-div');
+	result.innerHTML = "Loading ...";
+
 	sendQuery();
 }
 
