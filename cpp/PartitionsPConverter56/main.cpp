@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cassert>
 using namespace std;
 
 #define L 6
@@ -81,20 +82,20 @@ int main()
 		switch (curr)
 		{
 			case '1':
-				temp |= (1 << (3 * (count % INTSIZE)));
+				temp |= (1 << ((3 * count) % INTSIZE));
 				break;
 			case '2':
-				temp |= (2 << (3 * (count % INTSIZE)));
+				temp |= (2 << ((3 * count) % INTSIZE));
 				break;
 			case '3':
-				temp |= (3 << (3 * (count % INTSIZE)));
+				temp |= (3 << ((3 * count) % INTSIZE));
 				break;
 			case '4':
-				temp |= (4 << (3 * (count % INTSIZE)));
+				temp |= (4 << ((3 * count) % INTSIZE));
 				break;
 #if (L == 6)
 			case '5':
-				temp |= (5 << (3 * (count % INTSIZE)));
+				temp |= (5 << ((3 * count) % INTSIZE));
 				break;
 #endif
 		}
